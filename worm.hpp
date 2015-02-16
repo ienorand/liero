@@ -270,6 +270,7 @@ struct Worm : gvl::shared
 	, health(0)                  //Health left
 	, lives(0)                   //lives left
 	, kills(0)                   //Kills made
+	, timerms(0)                   //Timer for GOT in ms
 	, timer(0)                   //Timer for GOT
 	, killedTimer(0)             //Time until worm respawns
 	, currentFrame(0)
@@ -366,6 +367,7 @@ struct Worm : gvl::shared
 	int lives;                   //lives left
 	int kills;                   //Kills made
 	
+	int timerms;                   //Timer for GOT in ms
 	int timer;                   //Timer for GOT
 	int killedTimer;             //Time until worm respawns
 	int currentFrame;

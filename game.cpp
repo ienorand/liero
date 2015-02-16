@@ -426,10 +426,10 @@ void Game::processFrame()
 		
 		if(!someInvisible
 		&& lastKilledBy
-		&& (cycles % 70) == 0
 		&& lastKilledBy->timer < settings->timeToLose)
 		{
-			++lastKilledBy->timer;
+			++lastKilledBy->timerms;
+			lastKilledBy->timer = lastKilledBy->timerms * 14 / 1000;
 		}
 	}
 	break;
@@ -493,8 +493,8 @@ void Game::processFrame()
 		{
 			auto* holder = wormByIdx(holdazone.holderIdx);
 				
-			if ((cycles % 70) == 0)
-				++holder->timer;
+			++holder->timerms;
+			holder->timer = holder->timerms * 14 / 1000;
 
 			dec = true;
 		}
