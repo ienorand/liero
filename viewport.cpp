@@ -153,6 +153,7 @@ void Viewport::draw(Game& game, Renderer& renderer, bool isReplay)
 	{
 		common.font.drawShadowedText(renderer.bmp, worm.settings->name, worm.statsX, renderer.renderResY - 8, worm.settings->color);
 		common.font.drawText(renderer.bmp, timeToStringEx(game.cycles * 14), 95 * multiplier, renderer.renderResY - 15, 7);
+		common.font.drawText(renderer.bmp, timeToStringEx(game.realTicks), 95 * multiplier, renderer.renderResY - 7, 7);
 	}
 
 	int const stateColours[2][2] = {{6, 10}, {79, 4}};

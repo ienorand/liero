@@ -40,6 +40,7 @@ Game::Game(
 #endif
 
 	cycles = 0;
+	tickStart = SDL_GetTicks();
 }
 
 Game::~Game()
@@ -383,6 +384,7 @@ void Game::processFrame()
 	
 	// NOTE: This was originally the beginning of the processing, but has been rotated down to
 	// separate out the drawing
+	realTicks = SDL_GetTicks() - tickStart;
 	++cycles;
 	
 	if(!common->H[HBonusDisable]

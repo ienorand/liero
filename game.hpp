@@ -101,6 +101,8 @@ struct Game
 	int lastKilledIdx;
 	bool paused;
 	int cycles;
+	uint32_t tickStart;
+	uint32_t realTicks;
 	Rand rand;
 
 	Holdazone holdazone;
