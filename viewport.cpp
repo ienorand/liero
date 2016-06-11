@@ -669,4 +669,18 @@ void Viewport::draw(Game& game, Renderer& renderer, GameState state, bool isRepl
 			renderer.bmp.setPixel(x+1, y+1, color);
 		}
 	}
+
+	int x = 0;
+	int y = 0;
+	for (int i = 0; i < 256; i++) {
+		fillRect(renderer.bmp, x, y, 20, 10, i);
+		char c[3];
+		itoa(i, c, 10);
+		common.font.drawText(renderer.bmp, c, 3, x + 2, y + 2, 0);
+		x += 20;
+		if (x == 300) {
+			x = 0;
+			y += 10;
+		}
+	}
 }
