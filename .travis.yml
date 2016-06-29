@@ -4,5 +4,11 @@ compiler:
     - clang
     - gcc
 before_install:
+    - sudo apt-add-repository --yes ppa:zoogie/sdl2-snapshots
+install:
     - sudo apt-get update -qq
     - sudo apt-get install -qq libsdl2-dev
+script:
+    - cmake -DCMAKE_BUILD_TYPE=Release -G "Unix Makefiles"
+    - make
+
