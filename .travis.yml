@@ -2,21 +2,6 @@
 sudo: required
 dist: precise
 language: cpp
-addons:
-  apt:
-    sources:
-      # add PPAs with more up-to-date toolchains
-      - ubuntu-toolchain-r-test
-      - llvm-toolchain-precise-3.6
-      # sdl 2
-      - ppa:zoogie/sdl2-snapshots
-    packages:
-      # install toolchains
-      - gcc-5
-      - g++-5
-      - clang-3.6
-      - libsdl2-dev
-      - cmake
 matrix:
   include:
     - compiler: gcc
@@ -24,8 +9,13 @@ matrix:
         apt:
           sources:
             - ubuntu-toolchain-r-test
+            - libsdl2-dev
+            - cmake
           packages:
+            - gcc-5
             - g++-5
+            - libsdl2-dev
+            - cmake
       env: COMPILER=g++-5
     - compiler: clang
       addons:
@@ -33,6 +23,8 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise-3.7
+            - libsdl2-dev
+            - cmake
           packages:
             - clang-3.7
       env: COMPILER=clang++-3.7
