@@ -8,6 +8,7 @@ matrix:
       addons:
         apt:
           sources:
+            - ubuntu-toolchain-r-test
             - sourceline: 'ppa:zoogie/sdl2-snapshots'
           packages:
             - gcc-5
@@ -21,6 +22,7 @@ matrix:
       addons:
         apt:
           sources:
+            - ubuntu-toolchain-r-test
             - sourceline: 'ppa:zoogie/sdl2-snapshots'
           packages:
             - clang-3.5
