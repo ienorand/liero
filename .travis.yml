@@ -9,8 +9,7 @@ matrix:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-            - libsdl2-dev
-            - cmake
+            - ppa:zoogie/sdl2-snapshots
           packages:
             - gcc-5
             - g++-5
@@ -23,10 +22,11 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise-3.7
-            - libsdl2-dev
-            - cmake
+            - ppa:zoogie/sdl2-snapshots
           packages:
             - clang-3.7
+            - libsdl2-dev
+            - cmake
       env: COMPILER=clang++-3.7
 script:
     - cmake -DCMAKE_BUILD_TYPE=Release -G "Unix Makefiles"
