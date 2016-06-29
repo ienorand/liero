@@ -1,14 +1,39 @@
+# use newer ubuntu versions
+sudo: required
+dist: precise
 language: cpp
-script: cmake
-compiler:
-    - clang
-    - gcc
-before_install:
-    - sudo apt-add-repository --yes ppa:zoogie/sdl2-snapshots
-install:
-    - sudo apt-get update -qq
-    - sudo apt-get install -qq libsdl2-dev
+addons:
+  apt:
+    sources:
+      # add PPAs with more up-to-date toolchains
+      - ubuntu-toolchain-r-test
+      - llvm-toolchain-precise-3.6
+      # sdl 2
+      - ppa:zoogie/sdl2-snapshots
+    packages:
+      # install toolchains
+      - gcc-5
+      - g++-5
+      - clang-3.6
+matrix:
+  include:
+    - compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-5
+      env: COMPILER=g++-5
+    - compiler: clang
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.7
+          packages:
+            - clang-3.7
+      env: COMPILER=clang++-3.7
 script:
     - cmake -DCMAKE_BUILD_TYPE=Release -G "Unix Makefiles"
     - make
-
