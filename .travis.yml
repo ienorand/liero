@@ -4,7 +4,8 @@ dist: precise
 language: cpp
 matrix:
   include:
-    - addons:
+    - compiler: gcc
+      addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
@@ -18,7 +19,8 @@ matrix:
         - COMPILER=g++-5
         - CC=gcc-5
         - CXX=g++-5
-    - addons:
+    - compiler: clang
+      addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
@@ -33,5 +35,5 @@ matrix:
         - CC=clang-3.7
         - CXX=clang++-3.7
 script:
-    - cmake -DCMAKE_BUILD_TYPE=Release -G "Unix Makefiles"
+    - cmake -DCMAKE_CXX_COMPILER=$COMPILER -DCMAKE_BUILD_TYPE=Release -G "Unix Makefiles"
     - make
