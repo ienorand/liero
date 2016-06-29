@@ -9,7 +9,7 @@ matrix:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-            - ppa:zoogie/sdl2-snapshots
+            - sourceline: 'ppa:zoogie/sdl2-snapshots'
           packages:
             - gcc-5
             - g++-5
@@ -22,7 +22,7 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise-3.7
-            - ppa:zoogie/sdl2-snapshots
+            - sourceline: 'ppa:zoogie/sdl2-snapshots'
           packages:
             - clang-3.7
             - libsdl2-dev
