@@ -1,6 +1,6 @@
 # use newer ubuntu versions
 sudo: required
-dist: precise
+dist: trusty
 language: cpp
 matrix:
   include:
@@ -16,22 +16,22 @@ matrix:
             - libsdl2-dev
             - cmake
       env:
-        - CC_COMPILER=gcc-5
-        - CXX_COMPILER=g++-5
+        - CC_COMPILER=gcc-6
+        - CXX_COMPILER=g++-6
     - compiler: clang
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.7
+            - llvm-toolchain-trusty-3.8
             - sourceline: 'ppa:zoogie/sdl2-snapshots'
           packages:
-            - clang-3.7
+            - clang-3.8
             - libsdl2-dev
             - cmake
       env:
-        - CC_COMPILER=clang-3.7
-        - CXX_COMPILER=clang++-3.7
+        - CC_COMPILER=clang-3.8
+        - CXX_COMPILER=clang++-3.8
 script:
     - cmake -DCMAKE_C_COMPILER=$CC_COMPILER -DCMAKE_CXX_COMPILER=$CXX_COMPILER -DCMAKE_BUILD_TYPE=Release -G "Unix Makefiles"
     - make VERBOSE=1
