@@ -15,7 +15,7 @@ matrix:
             - gcc-5
             - g++-5
             - libsdl2-dev
-            - libpng16
+            - libpng16-dev
             - cmake
       env:
         - CC_COMPILER=gcc-5
@@ -30,7 +30,7 @@ matrix:
           packages:
             - clang-3.5
             - libsdl2-dev
-            - libpng16
+            - libpng16-dev
             - cmake
       env:
         - CC_COMPILER=clang-3.5
