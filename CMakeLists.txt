@@ -4,7 +4,7 @@ project (openliero)
 # add current path as module path to get required config file for sdl 2
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ".")
 find_package (SDL2 REQUIRED)
-find_package (PNG REQUIRED)
+find_package (PNG 1.6 REQUIRED)
 include_directories(
     ${SDL2_INCLUDE_DIR}
     ${PNG_INCLUDE_DIR}
