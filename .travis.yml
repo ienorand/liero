@@ -10,11 +10,12 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
             - sourceline: 'ppa:zoogie/sdl2-snapshots'
+            - sourceline: 'ppa:djcj/tools'
           packages:
             - gcc-5
             - g++-5
             - libsdl2-dev
-            - libpng-dev
+            - libpng16
             - cmake
       env:
         - CC_COMPILER=gcc-5
@@ -25,10 +26,11 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
             - sourceline: 'ppa:zoogie/sdl2-snapshots'
+            - sourceline: 'ppa:djcj/tools'
           packages:
             - clang-3.5
             - libsdl2-dev
-            - libpng-dev
+            - libpng16
             - cmake
       env:
         - CC_COMPILER=clang-3.5
