@@ -2392,6 +2392,8 @@ bool Gfx::loadPng(const char* file, uint8_t **output, uint32_t &output_width, ui
 	{
 		return false;
 	}
+	// Set output format after reading file header, otherwise we will get the image's
+	// native format
 	image.format = output_format;
 	*output = (uint8_t*) malloc(PNG_IMAGE_SIZE(image));
 	if (*output == NULL)
