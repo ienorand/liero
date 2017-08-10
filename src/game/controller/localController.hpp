@@ -29,7 +29,7 @@ struct LocalController : CommonController
 	void draw(Renderer& renderer, bool useSpectatorViewports);
 	void changeState(GameState newState);
 	void endRecord();
-	void swapLevel(Level& newLevel);
+	void swapLevel(Level *newLevel);
 	Level* currentLevel();
 	Game* currentGame();
 	bool running();

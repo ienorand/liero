@@ -139,7 +139,7 @@ void Worm::calculateReactionForce(Game& game, int newX, int newY, int dir)
 		int colX = newX + colPoints[dir][i].x;
 		int colY = newY + colPoints[dir][i].y;
 		
-		if(!game.level.checkedMatWrap(colX, colY).background())
+		if(!game.level->checkedMatWrap(colX, colY).background())
 		{
 			++reacts[dir];
 		}
@@ -233,7 +233,7 @@ void Worm::process(Game& game)
 					{
 						reacts[RFRight] += 5;
 					}
-					else if(iNext.x > game.level.width - 5)
+					else if(iNext.x > game.level->width - 5)
 					{
 						reacts[RFLeft] += 5;
 					}
@@ -249,7 +249,7 @@ void Worm::process(Game& game)
 							if(iNext.y > LC(WormFloatLevel))
 								vel.y -= LC(WormFloatPower);
 						}
-						else if(iNext.y > game.level.height - 6)
+						else if(iNext.y > game.level->height - 6)
 						{
 							reacts[RFUp] += 5;
 						}
@@ -843,8 +843,8 @@ void Worm::beginRespawn(Game& game)
 
 		// The original didn't have + 4 in both, which seems
 		// to be done in the exe and makes sense.
-		while(ftoi(pos.y) + 4 < game.level.height
-		&& game.level.mat(ftoi(pos.x), ftoi(pos.y) + 4).background())
+		while(ftoi(pos.y) + 4 < game.level->height
+		&& game.level->mat(ftoi(pos.x), ftoi(pos.y) + 4).background())
 		{
 			pos.y += itof(1);
 		}
@@ -883,11 +883,11 @@ void Worm::doRespawning(Game& game)
 		else if(logicRespawn.y > ftoi(pos.y) - 80) --logicRespawn.y;
 	}
 
-	limitXY(logicRespawn.x, logicRespawn.y, game.level.width - 158, game.level.height - 158);
+	limitXY(logicRespawn.x, logicRespawn.y, game.level->width - 158, game.level->height - 158);
 	
 	int destX = ftoi(pos.x) - 80;
 	int destY = ftoi(pos.y) - 80;
-	limitXY(destX, destY, game.level.width - 158, game.level.height - 158);
+	limitXY(destX, destY, game.level->width - 158, game.level->height - 158);
 
 	if(logicRespawn.x < destX + 5
 	&& logicRespawn.x > destX - 5
@@ -896,9 +896,9 @@ void Worm::doRespawning(Game& game)
 	&& ready) // Don't spawn in quicksim
 	{
 		auto ipos = ftoi(pos);
-		drawDirtEffect(common, game.rand, game.level, 0, ipos.x - 7, ipos.y - 7);
+		drawDirtEffect(common, game.rand, *game.level, 0, ipos.x - 7, ipos.y - 7);
 		if(game.settings->shadow)
-			correctShadow(common, game.level, gvl::rect(ipos.x - 10, ipos.y - 10, ipos.x + 11, ipos.y + 11));
+			correctShadow(common, *game.level, gvl::rect(ipos.x - 10, ipos.y - 10, ipos.x + 11, ipos.y + 11));
 		
 		ready = false;
 		game.soundPlayer->play(21);
@@ -1057,17 +1057,17 @@ void Worm::processMovement(Game& game)
 				digPos.y -= itof(7);
 				
 				auto idigPos = ftoi(digPos);
-				drawDirtEffect(common, game.rand, game.level, 7, idigPos.x, idigPos.y);
+				drawDirtEffect(common, game.rand, *game.level, 7, idigPos.x, idigPos.y);
 				if(game.settings->shadow)
-					correctShadow(common, game.level, gvl::rect(idigPos.x - 3, idigPos.y - 3, idigPos.x + 18, idigPos.y + 18));
+					correctShadow(common, *game.level, gvl::rect(idigPos.x - 3, idigPos.y - 3, idigPos.x + 18, idigPos.y + 18));
 				
 				digPos += dir * 2;
 
 //l_43EB:
 				idigPos = ftoi(digPos);
-				drawDirtEffect(common, game.rand, game.level, 7, idigPos.x, idigPos.y);
+				drawDirtEffect(common, game.rand, *game.level, 7, idigPos.x, idigPos.y);
 				if(game.settings->shadow)
-					correctShadow(common, game.level, gvl::rect(idigPos.x - 3, idigPos.y - 3, idigPos.x + 18, idigPos.y + 18));
+					correctShadow(common, *game.level, gvl::rect(idigPos.x - 3, idigPos.y - 3, idigPos.x + 18, idigPos.y + 18));
 				
 				//NOTE! Maybe the shadow corrections can be joined into one? Mmm?
 			} // 4552
@@ -1383,9 +1383,9 @@ void Worm::processSight(Game& game)
 		while(
 			temp.x >= 0 &&
 			temp.y >= 0 &&
-			temp.x < itof(game.level.width) &&
-			temp.y < itof(game.level.height) &&
-			game.level.mat(ftoi(temp)).background() &&
+			temp.x < itof(game.level->width) &&
+			temp.y < itof(game.level->height) &&
+			game.level->mat(ftoi(temp)).background() &&
 			!makeSightGreen);
 			
 		hotspotX = ftoi(temp.x);

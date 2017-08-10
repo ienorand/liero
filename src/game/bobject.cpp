@@ -23,14 +23,14 @@ bool BObject::process(Game& game)
 	
 	auto ipos = ftoi(pos);
 	
-	if(!game.level.inside(ipos))
+	if(!game.level->inside(ipos))
 	{
 		return false;
 	}
 	else
 	{
-		PalIdx c = game.level.pixel(ipos);
-		Material m = game.level.mat(ipos);
+		PalIdx c = game.level->pixel(ipos);
+		Material m = game.level->mat(ipos);
 		
 		if(m.background())
 			vel.y += LC(BObjGravity);
@@ -41,17 +41,17 @@ bool BObject::process(Game& game)
 		if((c >= 1 && c <= 2)
 		|| (c >= 77 && c <= 79)) // TODO: Read from EXE
 		{
-			game.level.setPixel(ipos, 77 + game.rand(3), common);
+			game.level->setPixel(ipos, 77 + game.rand(3), common);
 			return false;
 		}
 		else if(m.anyDirt())
 		{
-			game.level.setPixel(ipos, 82 + game.rand(3), common);
+			game.level->setPixel(ipos, 82 + game.rand(3), common);
 			return false;
 		}
 		else if(m.rock())
 		{
-			game.level.setPixel(ipos, 85 + game.rand(3), common);
+			game.level->setPixel(ipos, 85 + game.rand(3), common);
 			return false;
 		}
 	}

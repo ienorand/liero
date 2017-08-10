@@ -116,6 +116,7 @@
       <Filter>tl</Filter>
     </ClCompile>
     <ClCompile Include="..\src\game\spectatorviewport.cpp" />
+    <ClCompile Include="..\src\game\levelpng.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\game\gfx\blit.hpp">
@@ -300,6 +301,7 @@
     <ClInclude Include="..\src\game\viewport.hpp" />
     <ClInclude Include="..\src\game\weapon.hpp" />
     <ClInclude Include="..\src\game\worm.hpp" />
+    <ClInclude Include="..\src\game\levelpng.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

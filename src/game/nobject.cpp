@@ -93,7 +93,7 @@ void NObject::process(Game& game)
 
 	if(t.bounce > 0)
 	{
-		if(!game.level.inside(inewPos.x, ipos.y)
+		if(!game.level->inside(inewPos.x, ipos.y)
 		|| game.pixelMat(inewPos.x, ipos.y).dirtRock())
 		{
 			vel.x = -vel.x * t.bounce / 100;
@@ -101,7 +101,7 @@ void NObject::process(Game& game)
 			bounced = true;
 		}
 
-		if(!game.level.inside(ipos.x, inewPos.y)
+		if(!game.level->inside(ipos.x, inewPos.y)
 		|| game.pixelMat(ipos.x, inewPos.y).dirtRock())
 		{
 			vel.y = -vel.y * t.bounce / 100;
@@ -124,10 +124,10 @@ void NObject::process(Game& game)
 
 	if(inewPos.x < 0) pos.x = 0;
 	if(inewPos.y < 0) pos.y = 0;
-	if(inewPos.x >= game.level.width) pos.x = itof(game.level.width);
-	if(inewPos.y >= game.level.height) pos.y = itof(game.level.height);
+	if(inewPos.x >= game.level->width) pos.x = itof(game.level->width);
+	if(inewPos.y >= game.level->height) pos.y = itof(game.level->height);
 
-	if(!game.level.inside(inewPos)
+	if(!game.level->inside(inewPos)
 	|| game.pixelMat(inewPos.x, inewPos.y).dirtRock())
 	{
 		vel.zero();
@@ -138,14 +138,14 @@ void NObject::process(Game& game)
 			{
 				blitImageOnMap(
 					common,
-					game.level,
+					*game.level,
 					common.smallSprites.spritePtr(t.startFrame + curFrame),
 					ipos.x - 3,
 					ipos.y - 3,
 					7,
 					7);
 				if(game.settings->shadow)
-					correctShadow(common, game.level, gvl::rect(ipos.x - 8, ipos.y - 8, ipos.x + 9, ipos.y + 9)); // This seems like an overly large rectangle
+					correctShadow(common, *game.level, gvl::rect(ipos.x - 8, ipos.y - 8, ipos.x + 9, ipos.y + 9)); // This seems like an overly large rectangle
 			}
 
 			doExplode = true;
@@ -252,10 +252,10 @@ void NObject::process(Game& game)
 
 		if(t.dirtEffect >= 0)
 		{
-			drawDirtEffect(common, game.rand, game.level, t.dirtEffect, ftoi(pos.x) - 7, ftoi(pos.y) - 7);
+			drawDirtEffect(common, game.rand, *game.level, t.dirtEffect, ftoi(pos.x) - 7, ftoi(pos.y) - 7);
 
 			if(game.settings->shadow)
-				correctShadow(common, game.level, gvl::rect(ftoi(pos.x) - 10, ftoi(pos.y) - 10, ftoi(pos.x) + 11, ftoi(pos.y) + 11));
+				correctShadow(common, *game.level, gvl::rect(ftoi(pos.x) - 10, ftoi(pos.y) - 10, ftoi(pos.x) + 11, ftoi(pos.y) + 11));
 		}
 
 		if(t.splinterAmount > 0)

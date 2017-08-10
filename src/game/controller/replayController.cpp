@@ -202,15 +202,16 @@ void ReplayController::changeState(GameState newState)
 	state = newState;
 }
 	
-void ReplayController::swapLevel(Level& newLevel)
+void ReplayController::swapLevel(Level *newLevel)
 {
-	currentLevel()->swap(newLevel);
+	if (game.get() && replay.get())
+		game->level = newLevel;
 }
 
 Level* ReplayController::currentLevel()
 {
 	if(game.get() && replay.get())
-		return &game->level;
+		return game->level;
 	return nullptr;
 }
 

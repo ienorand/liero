@@ -222,74 +222,52 @@ typedef gvl::octet_reader reader_t;
 typedef gvl::in_archive<reader_t, GameSerializationContext> in_archive_t;
 //typedef gvl::out_archive<gvl::octet_stream_reader, GameSerializationContext> out_archive_t;
 
-void archive(in_archive_t ar, Level& level)
+void archive(in_archive_t ar, Level **level)
 {
 	unsigned int w = gvl::read_uint16(ar.reader);
 	unsigned int h = gvl::read_uint16(ar.reader);
-	level.resize(w, h);
-	
-	if(ar.context.replayVersion > 1)
-		archive(ar, level.origpal);
-
 	Common& common = *ar.context.game->common;
 
-#if 1
+	*level = new Level(common);
+	Level *level_ptr = *level;
+	level_ptr->resize(w, h);
+	
+	if(ar.context.replayVersion > 1)
+		archive(ar, level_ptr->origpal);
+
 	for(unsigned int y = 0; y < h; ++y)
 	for(unsigned int x = 0; x < w; ++x)
 	{
-		level.setPixel(x, y, ar.reader.get(), common);
+		level_ptr->setPixel(x, y, ar.reader.get(), common);
 	}
-#else
-	mtf level_mtf;
-	for(unsigned int y = 0; y < h; ++y)
-	for(unsigned int x = 0; x < w; ++x)
-	{
-		uint8_t rank = ar.reader.get();
-		uint8_t pix = level_mtf.rank_to_byte(rank);
-		level.data[y*w + x] = pix;
-		level_mtf.promote_rank(rank);
-	}
-#endif
 	
 	for(unsigned int i = 0; i < 256; ++i)
 	{
-		level.origpal.entries[i].r = ar.reader.get();
-		level.origpal.entries[i].g = ar.reader.get();
-		level.origpal.entries[i].b = ar.reader.get();
+		level_ptr->origpal.entries[i].r = ar.reader.get();
+		level_ptr->origpal.entries[i].g = ar.reader.get();
+		level_ptr->origpal.entries[i].b = ar.reader.get();
 	}
 }
 
 template<typename Writer>
-void archive(gvl::out_archive<Writer, GameSerializationContext> ar, Level& level)
+void archive(gvl::out_archive<Writer, GameSerializationContext> ar, Level **level)
 {
-	ar.ui16(level.width);
-	ar.ui16(level.height);
-	unsigned int w = level.width;
-	unsigned int h = level.height;
+	Level *level_ptr = *level;
+	ar.ui16(level_ptr->width);
+	ar.ui16(level_ptr->height);
+	unsigned int w = level_ptr->width;
+	unsigned int h = level_ptr->height;
 	
 	if(ar.context.replayVersion > 1)
-		archive(ar, level.origpal);
+		archive(ar, level_ptr->origpal);
 	
-#if 1
-	ar.writer.put(&level.data[0], w * h);
-#else
-	mtf level_mtf;
-	
-	for(unsigned int y = 0; y < h; ++y)
-	for(unsigned int x = 0; x < w; ++x)
-	{
-		uint8_t pix = level.data[y*w + x];
-		uint8_t rank = level_mtf.byte_to_rank(pix);
-		ar.writer.put(rank);
-		level_mtf.promote_rank(rank);
-	}
-#endif
+	ar.writer.put(&level_ptr->data[0], w * h);
 	
 	for(unsigned int i = 0; i < 256; ++i)
 	{
-		ar.writer.put(level.origpal.entries[i].r);
-		ar.writer.put(level.origpal.entries[i].g);
-		ar.writer.put(level.origpal.entries[i].b);
+		ar.writer.put(level_ptr->origpal.entries[i].r);
+		ar.writer.put(level_ptr->origpal.entries[i].g);
+		ar.writer.put(level_ptr->origpal.entries[i].b);
 	}
 }
 
@@ -375,7 +353,7 @@ void archive(Archive ar, Game& game)
 	
 	archive_worms(ar, game);
 	
-	archive(ar, game.level);
+	archive(ar, &game.level);
 }
 
 template<typename Reader, typename T>

@@ -134,7 +134,7 @@ int obstacles(Game& game, gvl::ivec2 from, gvl::ivec2 to)
 		dvec2 p = org + dir * d;
 
 		auto m = game.common->materials[
-			game.level.checkedPixelWrap((int)p.x, (int)p.y)];
+			game.level->checkedPixelWrap((int)p.x, (int)p.y)];
 
 		if (!m.background())
 		{
@@ -171,7 +171,7 @@ int obstacles(Game& game, Worm* from, Worm* to)
 		double py = orgY + dirY * d;
 
 		auto m = game.common->materials[
-			game.level.checkedPixelWrap((int)px, (int)py)];
+			game.level->checkedPixelWrap((int)px, (int)py)];
 
 		if (!m.background())
 		{
@@ -865,7 +865,7 @@ void FollowAI::process(Game& game, Worm& worm)
 			targety = game.holdazone.rect.center_y();
 		}
 
-		dlevel.build(game.level, common);
+		dlevel.build(*game.level, common);
 		auto* targetCell = dlevel.cell_from_px(targetx, targety);
 		targetCell->cost = 1;
 		dlevel.set_origin(targetCell);

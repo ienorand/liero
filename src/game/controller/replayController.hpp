@@ -33,7 +33,7 @@ struct ReplayController : CommonController
 	bool process();
 	void draw(Renderer& renderer, bool useSpectatorViewports);
 	void changeState(GameState newState);
-	void swapLevel(Level& newLevel);
+	void swapLevel(Level *newLevel);
 	Level* currentLevel();
 	Game* currentGame();
 	bool running();

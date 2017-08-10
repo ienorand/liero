@@ -11,17 +11,17 @@ void Bonus::process(Game& game)
 	
 	int ix = ftoi(x), iy = ftoi(y);
 
-	assert(ix >= 0 && ix < game.level.width);
+	assert(ix >= 0 && ix < game.level->width);
 	
-	if(game.level.inside(ix, iy + 1)
-	&& game.level.mat(ix, iy + 1).background())
+	if(game.level->inside(ix, iy + 1)
+	&& game.level->mat(ix, iy + 1).background())
 	{
 		velY += LC(BonusGravity);
 	}
 		
 	int inewY = ftoi(y + velY);
-	if(inewY < 0 || inewY >= game.level.height - 1
-	|| game.level.mat(ix, inewY).dirtRock())
+	if(inewY < 0 || inewY >= game.level->height - 1
+	|| game.level->mat(ix, inewY).dirtRock())
 	{
 		velY = -(velY * LC(BonusBounceMul)) / LC(BonusBounceDiv);
 		

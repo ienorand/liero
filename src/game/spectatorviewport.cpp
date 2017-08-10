@@ -179,7 +179,7 @@ void SpectatorViewport::draw(Game& game, Renderer& renderer, GameState state, bo
 		}
 	}
 
-	blitImageNoKeyColour(renderer.bmp, &game.level.data[0], offs.x, offs.y, game.level.width, game.level.height);
+	blitImageNoKeyColour(renderer.bmp, &game.level->data[0], offs.x, offs.y, game.level->width, game.level->height);
 
 	if (game.settings->gameMode == Settings::GMHoldazone)
 	{

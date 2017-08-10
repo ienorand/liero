@@ -36,21 +36,21 @@ void Ninjarope::process(Worm& owner, Game& game)
 		curLen = (vectorLength(ftoi(diff.x), ftoi(diff.y)) + 1) << LC(NRForceLenShl);
 		
 		if(ipos.x <= 0
-		|| ipos.x >= game.level.width - 1
+		|| ipos.x >= game.level->width - 1
 		|| ipos.y <= 0
-		|| ipos.y >= game.level.height - 1
-		|| game.level.mat(ipos).dirtRock())
+		|| ipos.y >= game.level->height - 1
+		|| game.level->mat(ipos).dirtRock())
 		{
 			if(!attached)
 			{
 				length = LC(NRAttachLength);
 				attached = true;
 				
-				if(game.level.inside(ipos))
+				if(game.level->inside(ipos))
 				{
-					if(game.level.mat(ipos).anyDirt())
+					if(game.level->mat(ipos).anyDirt())
 					{
-						PalIdx pix = game.level.pixel(ipos);
+						PalIdx pix = game.level->pixel(ipos);
 						for(int i = 0; i < 11; ++i) // TODO: Check 11 and read from exe
 						{
 							common.nobjectTypes[2].create2(

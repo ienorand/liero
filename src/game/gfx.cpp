@@ -1281,16 +1281,15 @@ void Gfx::selectLevel()
 		FileNode* sel = levSel.curSel();
 		if (previewNode != sel && sel && sel != random.get() && !sel->folder)
 		{
-			Level level(common);
+			Level *level;
 
-			ReaderFile f;
-
-			if (level.load(common, *settings, sel->getFsNode().toOctetReader()))
+			level = Level::createFromFile(common, *settings, sel->getFsNode().fullPath());
+			if (level)
 			{
 				int centerX = singleScreenRenderer.renderResX / 2;
 
-				level.drawMiniature(frozenScreen, 134, 162, 10);
-				level.drawMiniature(frozenSpectatorScreen, centerX - 126, singleScreenRenderer.renderResY - 208, 2);
+				level->drawMiniature(frozenScreen, 134, 162, 10);
+				level->drawMiniature(frozenSpectatorScreen, centerX - 126, singleScreenRenderer.renderResY - 208, 2);
 			}
 
 			previewNode = sel;
@@ -1874,8 +1873,7 @@ restart:
 	controller.reset(new LocalController(common, settings));
 	
 	{
-		Level newLevel(*common);
-		newLevel.generateFromSettings(*common, *settings, rand);
+		Level *newLevel = Level::generateFromSettings(*common, *settings, rand);
 		controller->swapLevel(newLevel);
 	}
 	
@@ -1907,12 +1905,11 @@ restart:
 			&& settings->levelFile == oldLevel->oldLevelFile)
 			{
 				// Take level and palette from old game
-				newController->swapLevel(*oldLevel);
+				newController->swapLevel(oldLevel);
 			}
 			else
 			{
-				Level newLevel(*common);
-				newLevel.generateFromSettings(*common, *settings, rand);
+				Level *newLevel = Level::generateFromSettings(*common, *settings, rand);
 				newController->swapLevel(newLevel);
 			}
 			

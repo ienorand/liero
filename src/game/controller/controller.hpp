@@ -35,7 +35,7 @@ struct Controller
 	
 	virtual Game* currentGame() = 0;
 	
-	virtual void swapLevel(Level& newLevel) = 0;
+	virtual void swapLevel(Level *newLevel) = 0;
 };
 
 

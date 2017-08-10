@@ -20,7 +20,6 @@ Game::Game(
 , soundPlayer(soundPlayer)
 , settings(settingsInit)
 , statsRecorder(new NormalStatsRecorder)
-, level(*common)
 , screenFlash(0)
 , gotChanged(false)
 , lastKilledIdx(-1)
@@ -195,12 +194,12 @@ bool checkBonusSpawnPosition(Game& game, int x, int y)
 {
 	gvl::rect rect(x - 2, y - 2, x + 3, y + 3);
 	
-	rect.intersect(game.level.rect());
+	rect.intersect(game.level->rect());
 	
 	for(int cx = rect.x1; cx < rect.x2; ++cx)
 	for(int cy = rect.y1; cy < rect.y2; ++cy)
 	{
-		if(game.level.mat(cx, cy).dirtRock())
+		if(game.level->mat(cx, cy).dirtRock())
 			return false;
 	}
 	
@@ -267,12 +266,12 @@ void checkMap(Game& game) {
 	Common& common = *game.common;
 	uint32 h = 1;
 	for (std::size_t i = 0; i < 504*350; ++i) {
-		h = h * 33 ^ game.level.data[i];
+		h = h * 33 ^ game.level->data[i];
 	}
 	LTRACE(maph, 0, pixl, h);
 	h = 1;
 	for (std::size_t i = 0; i < 504*350; ++i) {
-		h = h * 33 ^ game.level.materials[i].flags;
+		h = h * 33 ^ game.level->materials[i].flags;
 	}
 	LTRACE(maph, 0, matr, h);
 }
@@ -521,7 +520,7 @@ void Game::focus(Renderer& renderer)
 
 void Game::updateSettings(Renderer& renderer)
 {
-	renderer.origpal = level.origpal; // Activate the Level palette
+	renderer.origpal = level->origpal; // Activate the Level palette
 	
 	for(std::size_t i = 0; i < worms.size(); ++i)
 	{
@@ -537,7 +536,7 @@ void Game::spawnZone()
 
 	while (holdazone.zoneWidth >= 5)
 	{
-		if (level.selectSpawn(rand, holdazone.zoneWidth, holdazone.zoneHeight - 8, pos))
+		if (level->selectSpawn(rand, holdazone.zoneWidth, holdazone.zoneHeight - 8, pos))
 		{
 			holdazone.rect.x1 = pos.x;
 			holdazone.rect.y1 = pos.y;
@@ -704,15 +703,15 @@ bool checkRespawnPosition(Game& game, int x2, int y2, int oldX, int oldY, int x,
 	int minX = x - 3;
 	int minY = y - 4;
 	
-	if(maxX >= game.level.width) maxX = game.level.width - 1;
-	if(maxY >= game.level.height) maxY = game.level.height - 1;
+	if(maxX >= game.level->width) maxX = game.level->width - 1;
+	if(maxY >= game.level->height) maxY = game.level->height - 1;
 	if(minX < 0) minX = 0;
 	if(minY < 0) minY = 0;
 	
 	for(int i = minX; i != maxX; ++i)
 	for(int j = minY; j != maxY; ++j)
 	{
-		if(game.level.mat(i, j).rock()) // TODO: The special rock respawn bug is here, consider an option to turn it off
+		if(game.level->mat(i, j).rock()) // TODO: The special rock respawn bug is here, consider an option to turn it off
 			return false;
 	}
 	

@@ -337,14 +337,14 @@ void LocalController::endRecord()
 	}
 }
 	
-void LocalController::swapLevel(Level& newLevel)
+void LocalController::swapLevel(Level *newLevel)
 {
-	currentLevel()->swap(newLevel);
+	game.level = newLevel;
 }
 
 Level* LocalController::currentLevel()
 {
-	return &game.level;
+	return game.level;
 }
 
 Game* LocalController::currentGame()

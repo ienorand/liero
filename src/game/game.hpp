@@ -87,7 +87,7 @@ struct Game
 
 	Material pixelMat(int x, int y)
 	{
-		return common->materials[level.pixel(x, y)];
+		return common->materials[level->pixel(x, y)];
 	}
 
 	Worm* wormByIdx(int idx)
@@ -101,7 +101,7 @@ struct Game
 	gvl::shared_ptr<Settings> settings;
 	gvl::shared_ptr<StatsRecorder> statsRecorder;
 
-	Level level;
+	Level *level;
 
 	int screenFlash;
 	bool gotChanged;

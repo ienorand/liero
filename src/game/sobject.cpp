@@ -226,15 +226,15 @@ void SObjectType::create(Game& game, int x, int y, int ownerIdx, WormWeapon* fir
 
 			gvl::rect rect(x - width, y - width, x + width + 1, y + width + 1);
 
-			rect.intersect(game.level.rect());
+			rect.intersect(game.level->rect());
 
 			for(int y = rect.y1; y < rect.y2; ++y)
 			for(int x = rect.x1; x < rect.x2; ++x)
 			{
-				if(game.level.mat(x, y).anyDirt()
+				if(game.level->mat(x, y).anyDirt()
 				&& game.rand(8) == 0)
 				{
-					PalIdx pix = game.level.pixel(x, y);
+					PalIdx pix = game.level->pixel(x, y);
 					int angle = game.rand(128);
 					common.nobjectTypes[2].create2(
 						game,
@@ -250,10 +250,10 @@ void SObjectType::create(Game& game, int x, int y, int ownerIdx, WormWeapon* fir
 
 	if(dirtEffect >= 0)
 	{
-		drawDirtEffect(common, game.rand, game.level, dirtEffect, x - 7, y - 7);
+		drawDirtEffect(common, game.rand, *game.level, dirtEffect, x - 7, y - 7);
 
 		if(game.settings->shadow)
-			correctShadow(common, game.level, gvl::rect(x - 10, y - 10, x + 11, y + 11));
+			correctShadow(common, *game.level, gvl::rect(x - 10, y - 10, x + 11, y + 11));
 	}
 
 	auto br = game.bonuses.all();

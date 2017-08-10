@@ -146,9 +146,9 @@ void WObject::blowUpObject(Game& game, int causeIdx)
 	if(w.dirtEffect >= 0)
 	{
 		int ix = ftoi(x), iy = ftoi(y);
-		drawDirtEffect(common, game.rand, game.level, w.dirtEffect, ftoi(x) - 7, ftoi(y) - 7);
+		drawDirtEffect(common, game.rand, *game.level, w.dirtEffect, ftoi(x) - 7, ftoi(y) - 7);
 		if(game.settings->shadow)
-			correctShadow(common, game.level, gvl::rect(ix - 10, iy - 10, ix + 11, iy + 11));
+			correctShadow(common, *game.level, gvl::rect(ix - 10, iy - 10, ix + 11, iy + 11));
 	}
 }
 
@@ -212,7 +212,7 @@ void WObject::process(Game& game)
 			auto ipos = ftoi(pos);
 			auto inewPos = ftoi(pos + vel);
 
-			if(!game.level.inside(inewPos.x, ipos.y)
+			if(!game.level->inside(inewPos.x, ipos.y)
 			|| game.pixelMat(inewPos.x, ipos.y).dirtRock())
 			{
 				if(w.bounce != 100)
@@ -224,7 +224,7 @@ void WObject::process(Game& game)
 					vel.x = -vel.x;
 			}
 
-			if(!game.level.inside(ipos.x, inewPos.y)
+			if(!game.level->inside(ipos.x, inewPos.y)
 			|| game.pixelMat(ipos.x, inewPos.y).dirtRock())
 			{
 				if(w.bounce != 100)
@@ -312,12 +312,12 @@ void WObject::process(Game& game)
 			pos.x = 0;
 		if(inewPos.y < 0)
 			pos.y = 0;
-		if(inewPos.x >= game.level.width)
-			pos.x = itof(game.level.width - 1);
-		if(inewPos.y >= game.level.height)
-			pos.y = itof(game.level.height - 1);
+		if(inewPos.x >= game.level->width)
+			pos.x = itof(game.level->width - 1);
+		if(inewPos.y >= game.level->height)
+			pos.y = itof(game.level->height - 1);
 
-		if(!game.level.inside(inewPos)
+		if(!game.level->inside(inewPos)
 		|| game.pixelMat(inewPos.x, inewPos.y).dirtRock())
 		{
 			if(w.bounce == 0)

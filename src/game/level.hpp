@@ -10,32 +10,63 @@
 #include "common.hpp"
 #include <gvl/math/vec.hpp>
 #include <gvl/math/rect.hpp>
+#include "filesystem.hpp"
+#include "settings.hpp"
 
 struct Game;
-struct Settings;
 struct Rand;
 struct Common;
 
 struct Level
 {
+//protected:
 	Level(Common& common)
 	: width(0)
 	, height(0)
 	{
 		zeroMaterial = common.materials[0];
 	}
-	
-	// loads either an old-style liero level file or a png, automatically determining type
-	bool load(Common& common, Settings const& settings, gvl::octet_reader r);
-	// loads an old-style liero level file
-	bool loadLev(Common& common, Settings const& settings, gvl::octet_reader r);
-	// loads any png
-	bool loadPng(Common& common, Settings const& settings, gvl::octet_reader r);
-	
+public:
+	Level(Common& common, Settings const& settings, gvl::octet_reader r)
+	: Level(common)
+	{
+		resize(504, 350);
+
+		//std::size_t len = f.len;
+		bool resetPalette = true;
+
+		r.get(reinterpret_cast<uint8_t*>(&data[0]), width * height);
+
+		if (/*len >= 504*350 + 10 + 256*3
+			&&*/ (settings.extensions && settings.loadPowerlevelPalette))
+		{
+			uint8_t buf[10];
+			if (r.try_get(buf, 10))
+			{
+				if (!std::memcmp("POWERLEVEL", buf, 10))
+				{
+					Palette pal;
+					pal.read(r);
+					origpal.resetPalette(pal, settings);
+
+					resetPalette = false;
+				}
+			}
+		}
+
+		for (std::size_t i = 0; i < data.size(); ++i)
+			materials[i] = common.materials[data[i]];
+
+		if (resetPalette)
+			origpal.resetPalette(common.exepal, settings);
+	}
+
+	static Level *createFromFile(Common& common, Settings const& settings, std::string const& path);
+	static Level *generateFromSettings(Common& common, Settings const& settings, Rand& rand);
+
 	void generateDirtPattern(Common& common, Rand& rand);
 	void generateRandom(Common& common, Settings const& settings, Rand& rand);
 	void makeShadow(Common& common);
-	void generateFromSettings(Common& common, Settings const& settings, Rand& rand);
 	bool selectSpawn(Rand& rand, int w, int h, gvl::ivec2& selected);
 	void drawMiniature(Bitmap& dest, int mapX, int mapY, int step);
 		
@@ -107,18 +138,6 @@ struct Level
 	{
 		return static_cast<unsigned int>(pos.x) < static_cast<unsigned int>(width)
 		    && static_cast<unsigned int>(pos.y) < static_cast<unsigned int>(height);
-	}
-	
-	void swap(Level& other)
-	{
-		data.swap(other.data);
-		materials.swap(other.materials);
-		std::swap(width, other.width);
-		std::swap(height, other.height);
-		std::swap(origpal, other.origpal);
-		std::swap(oldRandomLevel, other.oldRandomLevel);
-		std::swap(oldLevelFile, other.oldLevelFile);
-		std::swap(zeroMaterial, other.zeroMaterial);
 	}
 	
 	gvl::rect rect()
