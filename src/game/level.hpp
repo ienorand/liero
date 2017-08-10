@@ -25,7 +25,12 @@ struct Level
 		zeroMaterial = common.materials[0];
 	}
 	
+	// loads either an old-style liero level file or a png, automatically determining type
 	bool load(Common& common, Settings const& settings, gvl::octet_reader r);
+	// loads an old-style liero level file
+	bool loadLev(Common& common, Settings const& settings, gvl::octet_reader r);
+	// loads any png
+	bool loadPng(Common& common, Settings const& settings, gvl::octet_reader r);
 	
 	void generateDirtPattern(Common& common, Rand& rand);
 	void generateRandom(Common& common, Settings const& settings, Rand& rand);

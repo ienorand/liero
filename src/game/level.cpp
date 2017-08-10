@@ -218,37 +218,58 @@ void Level::resize(int width_new, int height_new)
 
 bool Level::load(Common& common, Settings const& settings, gvl::octet_reader r)
 {
-	resize(504, 350);
-
-	//std::size_t len = f.len;
-	bool resetPalette = true;
-
-	r.get(reinterpret_cast<uint8_t*>(&data[0]), width * height);
-	
-	if(/*len >= 504*350 + 10 + 256*3
-	&&*/ (settings.extensions && settings.loadPowerlevelPalette))
+	bool loaded = loadLev(common, settings, r);
+	if (!loaded)
 	{
-		uint8_t buf[10];
-		if (r.try_get(buf, 10))
+		return loadPng(common, settings, r);
+	}
+	return loaded;
+}
+
+bool Level::loadLev(Common& common, Settings const& settings, gvl::octet_reader r)
+{
+	try
+	{
+		resize(504, 350);
+
+		//std::size_t len = f.len;
+		bool resetPalette = true;
+
+		r.get(reinterpret_cast<uint8_t*>(&data[0]), width * height);
+
+		if (/*len >= 504*350 + 10 + 256*3
+		&&*/ (settings.extensions && settings.loadPowerlevelPalette))
 		{
-			if(!std::memcmp("POWERLEVEL", buf, 10))
+			uint8_t buf[10];
+			if (r.try_get(buf, 10))
 			{
-				Palette pal;
-				pal.read(r);
-				origpal.resetPalette(pal, settings);
-			
-				resetPalette = false;
+				if (!std::memcmp("POWERLEVEL", buf, 10))
+				{
+					Palette pal;
+					pal.read(r);
+					origpal.resetPalette(pal, settings);
+
+					resetPalette = false;
+				}
 			}
 		}
-	}
-	
-	for (std::size_t i = 0; i < data.size(); ++i)
-		materials[i] = common.materials[data[i]];
 
-	if (resetPalette)
-		origpal.resetPalette(common.exepal, settings);
-	
+		for (std::size_t i = 0; i < data.size(); ++i)
+			materials[i] = common.materials[data[i]];
+
+		if (resetPalette)
+			origpal.resetPalette(common.exepal, settings);
+	}
+	catch (std::runtime_error&)
+	{
+		return false;
+	}
 	return true;
+}
+
+bool Level::loadPng(Common& common, Settings const& settings, gvl::octet_reader r)
+{
+	return false;
 }
 
 void Level::generateFromSettings(Common& common, Settings const& settings, Rand& rand)
@@ -263,16 +284,7 @@ void Level::generateFromSettings(Common& common, Settings const& settings, Rand&
 		if (path.find('.', 0) == std::string::npos)
 			path += ".LEV";
 
-		bool loaded = false;
-		try
-		{
-			loaded = load(common, settings, FsNode(path).toOctetReader());
-		}
-		catch (std::runtime_error&)
-		{
-			// Ignore
-		}
-		
+		bool loaded = load(common, settings, FsNode(path).toOctetReader());
 		if (!loaded)
 			generateRandom(common, settings, rand);
 	}

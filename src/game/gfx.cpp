@@ -1,5 +1,5 @@
 #include <SDL.h>
-#include <SDL_image.h>
+#include <png.h>
 #include <cstring>
 #include <cassert>
 #include <cstdlib>
@@ -383,11 +383,31 @@ void Gfx::setVideoMode()
 		// .app bundle, so don't override that here.
 #ifndef __APPLE__
 		std::string s = joinPath(getConfigNode().fullPath(), "icon.png");
-		SDL_Surface *icon = IMG_Load(s.c_str());
-		if (icon)
+		uint8_t *data;
+		png_uint_32 output_format = PNG_FORMAT_RGBA;
+		uint32_t width;
+		uint32_t height;
+		bool iconLoaded = loadPng(s.c_str(), &data, width, height, output_format);
+		if (iconLoaded)
 		{
-			SDL_SetWindowIcon(sdlWindow, icon);
-			SDL_FreeSurface(icon);
+			uint32_t rmask, gmask, bmask, amask;
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+			rmask = 0xff000000;
+			gmask = 0x00ff0000;
+			bmask = 0x0000ff00;
+			amask = 0x000000ff;
+#else // little endian
+			rmask = 0x000000ff;
+			gmask = 0x0000ff00;
+			bmask = 0x00ff0000;
+			amask = 0xff000000;
+#endif
+			SDL_Surface *surface = SDL_CreateRGBSurfaceFrom(data, width, height, 32, 4 * width, rmask, gmask, bmask, amask);
+			if (surface)
+			{
+				SDL_SetWindowIcon(sdlWindow, surface);
+				SDL_FreeSurface(surface);
+			}
 		}
 #endif
 	}
@@ -420,11 +440,31 @@ void Gfx::setVideoMode()
 	if (sdlSpectatorWindow)
 	{
 		std::string s = joinPath(getConfigNode().fullPath(), "spectator_icon.png");
-		SDL_Surface *spectator_icon = IMG_Load(s.c_str());
-		if (spectator_icon)
+		uint8_t *data;
+		png_uint_32 output_format = PNG_FORMAT_RGBA;
+		uint32_t width;
+		uint32_t height;
+		bool iconLoaded = loadPng(s.c_str(), &data, width, height, output_format);
+		if (iconLoaded)
 		{
-			SDL_SetWindowIcon(sdlSpectatorWindow, spectator_icon);
-			SDL_FreeSurface(spectator_icon);
+			uint32_t rmask, gmask, bmask, amask;
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+			rmask = 0xff000000;
+			gmask = 0x00ff0000;
+			bmask = 0x0000ff00;
+			amask = 0x000000ff;
+#else // little endian
+			rmask = 0x000000ff;
+			gmask = 0x0000ff00;
+			bmask = 0x00ff0000;
+			amask = 0xff000000;
+#endif
+			SDL_Surface *surface = SDL_CreateRGBSurfaceFrom(data, width, height, 32, 4 * width, rmask, gmask, bmask, amask);
+			if (surface)
+			{
+				SDL_SetWindowIcon(sdlWindow, surface);
+				SDL_FreeSurface(surface);
+			}
 		}
 	}
 #endif
@@ -1209,7 +1249,10 @@ void Gfx::selectLevel()
 		LS(Random), "", "", false, &levSel.rootNode));
 
 	{
-		levSel.fill(getConfigNode(), [](string const& name, string const& ext) { return ciCompare(ext, "LEV"); });
+		levSel.fill(getConfigNode(), [](string const& name, string const& ext) {
+			// png files and old liero lev files are supported
+			return ciCompare(ext, "LEV") || ciCompare(ext, "PNG");
+		});
 
 		random->id = 1;
 		levSel.rootNode.children.insert(levSel.rootNode.children.begin(), random);
@@ -1242,19 +1285,12 @@ void Gfx::selectLevel()
 
 			ReaderFile f;
 
-			try
+			if (level.load(common, *settings, sel->getFsNode().toOctetReader()))
 			{
-				if (level.load(common, *settings, sel->getFsNode().toOctetReader()))
-				{
-					int centerX = singleScreenRenderer.renderResX / 2;
+				int centerX = singleScreenRenderer.renderResX / 2;
 
-					level.drawMiniature(frozenScreen, 134, 162, 10);
-					level.drawMiniature(frozenSpectatorScreen, centerX - 126, singleScreenRenderer.renderResY - 208, 2);
-				}
-			}
-			catch (std::runtime_error&)
-			{
-				// Ignore
+				level.drawMiniature(frozenScreen, 134, 162, 10);
+				level.drawMiniature(frozenSpectatorScreen, centerX - 126, singleScreenRenderer.renderResY - 208, 2);
 			}
 
 			previewNode = sel;
@@ -2346,4 +2382,26 @@ int Gfx::menuLoop()
 	return selected;
 }
 
+bool Gfx::loadPng(const char* file, uint8_t **output, uint32_t &output_width, uint32_t &output_height, png_uint_32 output_format)
+{
+	png_image image;
+	image.version = PNG_IMAGE_VERSION;
+	image.opaque = NULL;
+	// seems like "1" means OK here. libpngs docs suck
+	if (png_image_begin_read_from_file(&image, file) != 1)
+	{
+		return false;
+	}
+	image.format = output_format;
+	*output = (uint8_t*) malloc(PNG_IMAGE_SIZE(image));
+	if (*output == NULL)
+	{
+		return false;
+	}
+	output_width = image.width;
+	output_height = image.height;
+	png_image_finish_read(&image, NULL, *output, PNG_IMAGE_ROW_STRIDE(image), NULL);
+	png_image_free(&image);
+	return true;
+}
 

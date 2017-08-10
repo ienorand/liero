@@ -24,7 +24,10 @@ How to build (Windows)
 
 Building on Windows
 -----------------------
-* Install Visual Studio 2015
+* Install Visual Studio 2017
+* Make sure you have, besides the usual C++ stuff:
+  - VC++ 2015 v140 toolset (libpng is not available compiled for the v141 toolset yet)
+  - Windows Universal CRT SDK
 * Install needed packages (SDL2) via nuget
 * Copy everything from the pkg directory to the _build directory
 

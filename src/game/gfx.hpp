@@ -4,6 +4,7 @@
 #include <SDL.h>
 #include <gvl/resman/shared_ptr.hpp>
 #include <gvl/math/rect.hpp>
+#include "png.h"
 
 #include <cstdio>
 #include <cassert>
@@ -214,11 +215,7 @@ struct Gfx
 	void infoBox(std::string const& text, int x = 320/2, int y = 200/2, bool clearScreen = true);
 
 	static void preparePalette(SDL_PixelFormat* format, Color realPal[256], uint32_t (&pal32)[256]);
-	
-	static void overlay(
-		SDL_PixelFormat* format,
-		uint8_t* src, int w, int h, std::size_t srcPitch,
-		uint8_t* dest, std::size_t destPitch, int mag);
+	static bool loadPng(const char* file, uint8_t **output, uint32_t &output_width, uint32_t &output_height, png_uint_32 output_format);
 
 	void setConfigPath(std::string const& path)
 	{	
