@@ -356,6 +356,8 @@ int mz_uncompress(unsigned char *pDest, mz_ulong *pDest_len, const unsigned char
 // Returns a string description of the specified error code, or NULL if the error code is invalid.
 const char *mz_error(int err);
 
+#define MINIZ_NO_ZLIB_COMPATIBLE_NAMES
+
 // Redefine zlib-compatible names to miniz equivalents, so miniz.c can be used as a drop-in replacement for the subset of zlib that miniz.c supports.
 // Define MINIZ_NO_ZLIB_COMPATIBLE_NAMES to disable zlib-compatibility if you use zlib in the same project.
 #ifndef MINIZ_NO_ZLIB_COMPATIBLE_NAMES
