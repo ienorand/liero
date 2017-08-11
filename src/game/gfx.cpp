@@ -2461,27 +2461,5 @@ bool Gfx::loadPng(const char* file, uint8_t **output, uint32_t &output_width, ui
 	fclose(fp);
 
 	return true;
-
-/*	png_image image;
-	image.version = PNG_IMAGE_VERSION;
-	image.opaque = NULL;
-	// seems like "1" means OK here. libpngs docs suck
-	if (png_image_begin_read_from_file(&image, file) != 1)
-	{
-		return false;
-	}
-	// Set output format after reading file header, otherwise we will get the image's
-	// native format
-	image.format = output_format;
-	*output = (uint8_t*) malloc(PNG_IMAGE_SIZE(image));
-	if (*output == NULL)
-	{
-		return false;
-	}
-	output_width = image.width;
-	output_height = image.height;
-	png_image_finish_read(&image, NULL, *output, PNG_IMAGE_ROW_STRIDE(image), NULL);
-	png_image_free(&image);
-	return true;*/
 }
 
