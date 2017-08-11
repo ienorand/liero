@@ -216,7 +216,7 @@ struct Gfx
 
 	static void preparePalette(SDL_PixelFormat* format, Color realPal[256], uint32_t (&pal32)[256]);
 	// loads any PNG file into an RGBA array
-	static bool loadPng(const char* file, uint8_t **output, uint32_t &output_width, uint32_t &output_height, png_uint_32 output_format);
+	static bool loadPng(const char* file, uint8_t **output, uint32_t &output_width, uint32_t &output_height);
 
 	void setConfigPath(std::string const& path)
 	{	

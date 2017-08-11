@@ -29,7 +29,7 @@ struct LevelPng : Level
 		uint8_t *pngdata;
 		uint32_t width;
 		uint32_t height;
-		if (!Gfx::loadPng(path.c_str(), &pngdata, width, height, PNG_FORMAT_RGBA))
+		if (!Gfx::loadPng(path.c_str(), &pngdata, width, height))
 		{
 			throw std::runtime_error("Could not load png file");
 		}

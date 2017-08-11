@@ -384,10 +384,9 @@ void Gfx::setVideoMode()
 #ifndef __APPLE__
 		std::string s = joinPath(getConfigNode().fullPath(), "icon.png");
 		uint8_t *data;
-		png_uint_32 output_format = PNG_FORMAT_RGBA;
 		uint32_t width;
 		uint32_t height;
-		bool iconLoaded = loadPng(s.c_str(), &data, width, height, output_format);
+		bool iconLoaded = loadPng(s.c_str(), &data, width, height);
 		if (iconLoaded)
 		{
 			uint32_t rmask, gmask, bmask, amask;
@@ -444,7 +443,7 @@ void Gfx::setVideoMode()
 		png_uint_32 output_format = PNG_FORMAT_RGBA;
 		uint32_t width;
 		uint32_t height;
-		bool iconLoaded = loadPng(s.c_str(), &data, width, height, output_format);
+		bool iconLoaded = loadPng(s.c_str(), &data, width, height);
 		if (iconLoaded)
 		{
 			uint32_t rmask, gmask, bmask, amask;
@@ -2379,7 +2378,7 @@ int Gfx::menuLoop()
 	return selected;
 }
 
-bool Gfx::loadPng(const char* file, uint8_t **output, uint32_t &output_width, uint32_t &output_height, png_uint_32 output_format)
+bool Gfx::loadPng(const char* file, uint8_t **output, uint32_t &output_width, uint32_t &output_height)
 {
 	FILE *fp = fopen(file, "rb");
 
