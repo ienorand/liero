@@ -440,7 +440,6 @@ void Gfx::setVideoMode()
 	{
 		std::string s = joinPath(getConfigNode().fullPath(), "spectator_icon.png");
 		uint8_t *data;
-		png_uint_32 output_format = PNG_FORMAT_RGBA;
 		uint32_t width;
 		uint32_t height;
 		bool iconLoaded = loadPng(s.c_str(), &data, width, height);
