@@ -110,7 +110,7 @@ add_executable(openliero ${GAME_SOURCES} ${RESOURCE_FILES})
 add_executable(tctool ${TC_TOOL_SOURCES})
 add_executable(videotool EXCLUDE_FROM_ALL ${VIDEO_TOOL_SOURCES})
 target_link_libraries (openliero ${SDL2_LIBRARY} ${PNG_LIBRARY})
-target_link_libraries (tctool ${SDL2_LIBRARY})
+target_link_libraries (tctool ${SDL2_LIBRARY} ${PNG_LIBRARY})
 target_link_libraries (videotool avcodec avformat avutil dl pthread swresample swscale x264)
 include_directories(src/game)
 
