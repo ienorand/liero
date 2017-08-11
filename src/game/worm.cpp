@@ -852,7 +852,7 @@ void Worm::beginRespawn(Game& game)
 		if(++trials >= 50000)
 			break;
 	}
-	while(!checkRespawnPosition(game, enemy.x, enemy.y, temp.x, temp.y, ftoi(pos.x), ftoi(pos.y)));
+	while(!Game::checkRespawnPosition(game, enemy.x, enemy.y, temp.x, temp.y, ftoi(pos.x), ftoi(pos.y)));
 		
 	killedTimer = -1;
 }

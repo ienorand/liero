@@ -85,6 +85,10 @@ struct Game
 
 	void spawnZone();
 
+	static bool checkRespawnPosition(Game& game, int x2, int y2, int oldX, int oldY, int x, int y);
+	// loads any PNG file into an RGBA array
+	static bool loadPng(const char* file, uint8_t **output, uint32_t &output_width, uint32_t &output_height);
+
 	Material pixelMat(int x, int y)
 	{
 		return common->materials[level->pixel(x, y)];
@@ -129,8 +133,6 @@ struct Game
 
 	bool quickSim;
 };
-
-bool checkRespawnPosition(Game& game, int x2, int y2, int oldX, int oldY, int x, int y);
 
 #endif // LIERO_GAME_HPP
 
