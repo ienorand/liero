@@ -2381,7 +2381,88 @@ int Gfx::menuLoop()
 
 bool Gfx::loadPng(const char* file, uint8_t **output, uint32_t &output_width, uint32_t &output_height, png_uint_32 output_format)
 {
-	png_image image;
+	FILE *fp = fopen(file, "rb");
+
+	png_structp png = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+	if (!png)
+	{
+		return false;
+	}
+
+	png_infop info = png_create_info_struct(png);
+	if (!info)
+	{
+		return false;
+	}
+
+	if (setjmp(png_jmpbuf(png)))
+	{
+		return false;
+	}
+
+	png_init_io(png, fp);
+
+	png_read_info(png, info);
+
+	output_width = png_get_image_width(png, info);
+	output_height = png_get_image_height(png, info);
+	uint32_t color_type = png_get_color_type(png, info);
+	uint8_t bit_depth = png_get_bit_depth(png, info);
+
+	if (bit_depth == 16)
+	{
+		png_set_strip_16(png);
+	}
+
+	if (color_type == PNG_COLOR_TYPE_PALETTE)
+	{
+		png_set_palette_to_rgb(png);
+	}
+
+	// PNG_COLOR_TYPE_GRAY_ALPHA is always 8 or 16bit depth.
+	if (color_type == PNG_COLOR_TYPE_GRAY && bit_depth < 8)
+	{
+		png_set_expand_gray_1_2_4_to_8(png);
+	}
+
+	if (png_get_valid(png, info, PNG_INFO_tRNS))
+	{
+		png_set_tRNS_to_alpha(png);
+	}
+
+	// These color_type don't have an alpha channel, fill it with 0xff.
+	if (color_type == PNG_COLOR_TYPE_RGB ||
+		color_type == PNG_COLOR_TYPE_GRAY ||
+		color_type == PNG_COLOR_TYPE_PALETTE)
+	{
+		png_set_filler(png, 0xFF, PNG_FILLER_AFTER);
+	}
+
+	if (color_type == PNG_COLOR_TYPE_GRAY ||
+		color_type == PNG_COLOR_TYPE_GRAY_ALPHA)
+	{
+		png_set_gray_to_rgb(png);
+	}
+
+	png_read_update_info(png, info);
+
+	png_size_t bytes_per_row = png_get_rowbytes(png, info);
+	*output = (uint8_t*)malloc(sizeof(png_bytep) * output_height * bytes_per_row);
+
+	png_bytep *row_pointers = (png_bytep*)malloc(sizeof(png_bytep) * output_height);
+	for (int i = 0; i < output_height; i++)
+	{
+		row_pointers[i] = *output + i * bytes_per_row;
+	}
+
+	png_read_image(png, row_pointers);
+	free(row_pointers);
+
+	fclose(fp);
+
+	return true;
+
+/*	png_image image;
 	image.version = PNG_IMAGE_VERSION;
 	image.opaque = NULL;
 	// seems like "1" means OK here. libpngs docs suck
@@ -2401,6 +2482,6 @@ bool Gfx::loadPng(const char* file, uint8_t **output, uint32_t &output_width, ui
 	output_height = image.height;
 	png_image_finish_read(&image, NULL, *output, PNG_IMAGE_ROW_STRIDE(image), NULL);
 	png_image_free(&image);
-	return true;
+	return true;*/
 }
 
