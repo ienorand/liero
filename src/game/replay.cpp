@@ -3,6 +3,8 @@
 #include "game.hpp"
 #include "worm.hpp"
 #include "viewport.hpp"
+#include "level.hpp"
+#include "levellev.hpp"
 #include <gvl/support/type_info.hpp>
 #include <gvl/serialization/archive.hpp>
 #include <gvl/io2/deflate_filter.hpp>
@@ -228,8 +230,9 @@ void archive(in_archive_t ar, Level **level)
 	unsigned int h = gvl::read_uint16(ar.reader);
 	Common& common = *ar.context.game->common;
 
-	*level = new Level(common);
-	Level *level_ptr = *level;
+	// FIXME could be LevelPng
+	*level = new LevelLev(common);
+	LevelLev *level_ptr = (LevelLev*)*level;
 	level_ptr->resize(w, h);
 	
 	if(ar.context.replayVersion > 1)

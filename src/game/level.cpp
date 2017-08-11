@@ -1,5 +1,6 @@
 #include "level.hpp"
 
+#include "levellev.hpp"
 #include "levelpng.hpp"
 #include "game.hpp"
 #include "gfx.hpp"
@@ -101,7 +102,7 @@ bool isNoRock(Common& common, Level& level, int size, int x, int y)
 
 void Level::generateRandom(Common& common, Settings const& settings, Rand& rand)
 {
-	origpal.resetPalette(common.exepal, settings);
+	resetPalette(common, settings);
 	
 	generateDirtPattern(common, rand);
 	
@@ -208,21 +209,12 @@ void Level::makeShadow(Common& common)
 		}
 	}
 }
-
-void Level::resize(int width_new, int height_new)
-{
-	width = width_new;
-	height = height_new;
-	data.resize(width * height);
-	materials.resize(width * height);
-}
-
 Level* Level::createFromFile(Common& common, Settings const& settings, std::string const& path)
 {
 	Level *l;
 	try 
 	{
-		l = new Level(common, settings, FsNode(path).toOctetReader());
+		l = new LevelLev(common, settings, FsNode(path).toOctetReader());
 	}
 	catch (std::runtime_error&)
 	{
@@ -243,7 +235,7 @@ Level *Level::generateFromSettings(Common& common, Settings const& settings, Ran
 	Level *l;
 	if(settings.randomLevel)
 	{
-		l = new Level(common);
+		l = new LevelLev(common);
 		l->generateRandom(common, settings, rand);
 	}
 	else
